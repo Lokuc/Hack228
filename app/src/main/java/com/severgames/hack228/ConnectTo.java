@@ -19,7 +19,7 @@ public class ConnectTo extends AppCompatActivity {
 
     public void onClick(View v){
         if(v.getId()==R.id.button){
-            //ip=((EditText)findViewById(R.id.editTextTextPersonName2)).getText().toString();
+            ip=((EditText)findViewById(R.id.editTextTextPersonName2)).getText().toString();
             System.out.println(ip+"gh");
             Intent intent = new Intent(ConnectTo.this, MainHack.class);
             startActivity(intent);
