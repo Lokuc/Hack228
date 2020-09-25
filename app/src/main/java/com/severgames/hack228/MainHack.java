@@ -60,6 +60,11 @@ public class MainHack extends AppCompatActivity {
                                 // считываем его
                                 String Massage = in.nextLine();
                                 System.out.println(Massage);
+                                if(Massage.equals("0")){
+                                    createOneShotVibrationUsingVibrationEffect(100);
+                                }else{
+                                    createOneShotVibrationUsingVibrationEffect(200);
+                                }
                             }
                         }
 
