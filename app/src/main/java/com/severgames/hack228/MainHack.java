@@ -116,8 +116,6 @@ public class MainHack extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void createOneShotVibrationUsingVibrationEffect(int lon) {
-        // 1000 : Vibrate for 1 sec
-        // VibrationEffect.DEFAULT_AMPLITUDE - would perform vibration at full strength
         System.out.println("wibr");
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);

@@ -1,14 +1,25 @@
 package com.severgames.hack228;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import java.lang.ref.WeakReference;
 import java.net.DatagramSocket;
+import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Enumeration;
 
 public class CreateServ extends AppCompatActivity {
 
@@ -21,16 +32,25 @@ public class CreateServ extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try{
-                    final DatagramSocket socket = new DatagramSocket();
-                    socket.connect(InetAddress.getByName("0.0.0.0"), 10002);
-                    a = socket.getLocalAddress().getHostAddress();
-                } catch (SocketException | UnknownHostException e) {
-                    e.printStackTrace();
+                try {
+                    for (Enumeration en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+                        NetworkInterface intf = (NetworkInterface) en.nextElement();
+                        for (Enumeration enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
+                            InetAddress inetAddress = (InetAddress) enumIpAddr.nextElement();
+                            if (!inetAddress.isLoopbackAddress() && inetAddress instanceof Inet4Address) {
+                                String ipAddress = inetAddress.getHostAddress().toString();
+                                Log.e("IP address", "" + ipAddress);
+                                a = ipAddress;
+                                TextView tv = findViewById(R.id.textView2);
+                                tv.setText(a);
+                            }
+                        }
+                        }
+                    } catch(Exception e){
+                        e.printStackTrace();
+                    }
                 }
-            }
-        }).start();
-        ((TextView)findViewById(R.id.textView2)).setText(a);
+            }).start();
         System.out.println(a+"bgfh");
     }
 
