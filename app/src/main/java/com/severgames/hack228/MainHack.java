@@ -3,16 +3,23 @@ package com.severgames.hack228;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.text.format.Time;
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.TextView;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Date;
 import java.util.Scanner;
 
 public class MainHack extends AppCompatActivity {
@@ -23,6 +30,13 @@ public class MainHack extends AppCompatActivity {
     PrintWriter out;
     String tmp;
     Vibrator vibrator;
+    TextView deEnc;
+    long lastNum;
+    long time;
+    long tmpTime;
+    int num;
+    Date date;
+    String prev;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -60,6 +74,7 @@ public class MainHack extends AppCompatActivity {
                                 // считываем его
                                 String Massage = in.nextLine();
                                 System.out.println(Massage);
+                                deEncryption(Massage);
                                 if(Massage.equals("0")){
                                     createOneShotVibrationUsingVibrationEffect(100);
                                 }else{
@@ -112,17 +127,63 @@ public class MainHack extends AppCompatActivity {
             }).start();
 
         }
+        deEnc=findViewById(R.id.textView3);
+        time=0;
+        num=0;
+        lastNum=0;
+        prev="";//01101
+        date=new Date();
+
+
+    }
+
+    private void deEncryption(String msg){
+        date = new Date();
+        tmpTime=date.getTime();
+        if(time==0){
+            time=date.getTime();
+        }
+        if((tmpTime-time)<3000L){       //0 1 2
+            if(msg.equals("1")){
+                if(num==0){
+                    lastNum=1;
+                }else {
+                    lastNum += Math.pow(2L, num);
+                }
+            }
+            num++;
+            System.out.println(lastNum+" "+num);
+        }else{
+            prev=prev+" "+lastNum;
+            num=0;
+            lastNum=0;
+        }
+        time=tmpTime;
+        new Thread() {
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void run() {
+                        deEnc.setText(prev+" "+lastNum);
+                    }
+                });
+            }
+        }.start();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void createOneShotVibrationUsingVibrationEffect(int lon) {
-        System.out.println("wibr");
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
             VibrationEffect effect = VibrationEffect.createOneShot(lon, VibrationEffect.DEFAULT_AMPLITUDE);
             vibrator.vibrate(effect);
         }
 
+    }
+
+    public void onClick(View v){
+        deEnc.setText(lastNum+"");
     }
 
     public boolean onKeyUp(int keyCode, KeyEvent event) {
