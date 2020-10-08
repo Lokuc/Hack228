@@ -112,6 +112,7 @@ public class MainHack extends AppCompatActivity {
                                 // считываем его
                                 String Massage = in.nextLine();
                                 System.out.println(Massage);
+                                deEncryption(Massage);
                                 if(Massage.equals("0")){
                                     createOneShotVibrationUsingVibrationEffect(100);
                                 }else{
@@ -143,21 +144,19 @@ public class MainHack extends AppCompatActivity {
         if(time==0){
             time=date.getTime();
         }
-        if((tmpTime-time)<3000L){       //0 1 2
-            if(msg.equals("1")){
-                if(num==0){
-                    lastNum=1;
-                }else {
-                    lastNum += Math.pow(2L, num);
-                }
-            }
-            num++;
-            System.out.println(lastNum+" "+num);
-        }else{
+        if((tmpTime-time) >1200L){       //0 1 2
             prev=prev+" "+lastNum;
             num=0;
             lastNum=0;
         }
+        if(msg.equals("1")){
+            if(num==0){
+                lastNum=1;
+            }else {
+                lastNum += Math.pow(2L, num);
+            }
+        }
+        num++;
         time=tmpTime;
         new Thread() {
             public void run() {
@@ -183,6 +182,7 @@ public class MainHack extends AppCompatActivity {
     }
 
     public void onClick(View v){
+        prev="";
         deEnc.setText(lastNum+"");
     }
 
